@@ -15,6 +15,7 @@ router.post('/option1', async (req, res) => {
       .then((res) => {
         const decodeData = decodeURIComponent(res.data)
         const jsonData = JSON.parse(decodeData).data
+        console.log(jsonData)
         return jsonData.reverse()
       })
   } catch (err) {
@@ -32,6 +33,7 @@ router.post('/option2', async (req, res) => {
       .then((res) => {
         const decodeData = decodeURIComponent(res.data)
         const jsonData = JSON.parse(decodeData).data
+        console.log(jsonData)
         return jsonData
       })
   } catch (err) {
@@ -57,6 +59,7 @@ router.post('/option3', async (req, res) => {
       .then((res) => {
         const decodeData = decodeURIComponent(res.data)
         const jsonData = JSON.parse(decodeData).data
+        console.log(jsonData)
         return jsonData
       })
   } catch (err) {
