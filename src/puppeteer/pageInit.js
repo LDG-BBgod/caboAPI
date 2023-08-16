@@ -3,7 +3,6 @@ const { puppeteerManager } = require('./main')
 async function pageInit(userId) {
   const { page } = await puppeteerManager.getInstance(userId)
   await page.waitForTimeout(300)
-  await page.waitForTimeout(3000)
   try {
     // 페이지 접속
     await page.goto('https://www.e-insmarket.or.kr/')

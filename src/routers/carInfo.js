@@ -74,6 +74,7 @@ router.post('/option4', async (req, res) => {
     const options1 = req.body.options.carValue1.id
     const options2 = req.body.options.carValue2.id
     const options3 = req.body.options.carValue3.id
+    console.log(`https://api.codef.io/v1/kr/car/detail-list?brand=${options1}&model=${options2}&year=${options3}`)
     resData = await axios
       .get(
         `https://api.codef.io/v1/kr/car/detail-list?brand=${options1}&model=${options2}&year=${options3}`
