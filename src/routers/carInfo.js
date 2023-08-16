@@ -15,7 +15,6 @@ router.post('/option1', async (req, res) => {
       .then((res) => {
         const decodeData = decodeURIComponent(res.data)
         const jsonData = JSON.parse(decodeData).data
-        console.log(jsonData)
         return jsonData.reverse()
       })
   } catch (err) {
@@ -33,7 +32,6 @@ router.post('/option2', async (req, res) => {
       .then((res) => {
         const decodeData = decodeURIComponent(res.data)
         const jsonData = JSON.parse(decodeData).data
-        console.log(jsonData)
         return jsonData
       })
   } catch (err) {
@@ -43,15 +41,22 @@ router.post('/option2', async (req, res) => {
 })
 
 router.post('/option3', async (req, res) => {
+  console.log('옵션 진입')
   let resData = null
   const currentDate = new Date()
+  console.log(currentDate)
   const year = currentDate.getFullYear()
   const month = String(currentDate.getMonth() + 1).padStart(2, '0')
   const day = String(currentDate.getDate()).padStart(2, '0')
   const formattedDate = `${year}${month}${day}`
+  console.log('try 진입')
   try {
     const options1 = req.body.options.carValue1.id
     const options2 = req.body.options.carValue2.id
+    console.log(
+      `https://api.codef.io/v1/kr/car/year-list?brand=${options1}&model=${options2}&startDate=${formattedDate}`
+    )
+
     resData = await axios
       .get(
         `https://api.codef.io/v1/kr/car/year-list?brand=${options1}&model=${options2}&startDate=${formattedDate}`
@@ -74,7 +79,6 @@ router.post('/option4', async (req, res) => {
     const options1 = req.body.options.carValue1.id
     const options2 = req.body.options.carValue2.id
     const options3 = req.body.options.carValue3.id
-    console.log(`https://api.codef.io/v1/kr/car/detail-list?brand=${options1}&model=${options2}&year=${options3}`)
     resData = await axios
       .get(
         `https://api.codef.io/v1/kr/car/detail-list?brand=${options1}&model=${options2}&year=${options3}`
