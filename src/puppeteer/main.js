@@ -15,7 +15,6 @@ class PuppeteerManager {
   }
 
   async createInstance(userId) {
-    console.log(userId, 'puppeteer 인스턴스가 생성중')
     let option = null
     if (process.env.IS_DEV === 'true') {
       option = {
@@ -101,7 +100,6 @@ class PuppeteerManager {
   }
 
   async releaseInstance(userId) {
-    console.log(userId, '인스턴스 종료로직 들어옴')
     if (this.instances) {
       const { browser, page } = this.instances
       await page.close()

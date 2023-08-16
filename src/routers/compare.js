@@ -15,13 +15,28 @@ async function waitTime(milliseconds) {
 
 const router = express.Router()
 
+let isWorkerRunning = false
+let queuedResponse = null
+
 router.get('/pageInit', async (req, res) => {
   const userIP = req.clientIp
-  console.log(userIP, 'init들어옴')
+  if (isWorkerRunning) {
+    queuedResponse = res
+    return
+  }
+
+  isWorkerRunning = true
+
   try {
     const worker = await workerManager.getWorker(userIP)
     worker.once('message', async (result) => {
+      isWorkerRunning = false
       res.send(result)
+
+      if (queuedResponse) {
+        queuedResponse.send(result)
+        queuedResponse = null
+      }
     })
     const data = {
       type: 'pageInit',
@@ -30,13 +45,13 @@ router.get('/pageInit', async (req, res) => {
     worker.postMessage(data)
   } catch (err) {
     console.error(err)
+    isWorkerRunning = false
     res.status(500).send('에러 발생')
   }
 })
 
 router.post('/phoneSubmit', async (req, res) => {
   const userIP = req.clientIp
-  console.log(userIP, '인증번호요청 들어옴')
   try {
     const worker = await workerManager.getWorker(userIP)
 
@@ -57,7 +72,6 @@ router.post('/phoneSubmit', async (req, res) => {
 
 router.post('/authCheck', async (req, res) => {
   const userIP = req.clientIp
-  console.log(userIP, '인증번호 확인 들어옴')
   try {
     const worker = await workerManager.getWorker(userIP)
 
@@ -80,7 +94,6 @@ router.post('/authCheck', async (req, res) => {
 
 router.post('/selectCar', async (req, res) => {
   const userIP = req.clientIp
-  console.log(userIP, '자동차 선택 들어옴')
   try {
     const worker = await workerManager.getWorker(userIP)
     worker.once('message', async (result) => {
@@ -101,7 +114,6 @@ router.post('/selectCar', async (req, res) => {
 
 router.post('/step4Back', async (req, res) => {
   const userIP = req.clientIp
-  console.log(userIP, '자동차 선택 들어옴')
   try {
     const worker = await workerManager.getWorker(userIP)
     worker.once('message', async (result) => {
@@ -122,7 +134,6 @@ router.post('/step4Back', async (req, res) => {
 
 router.post('/getResult', async (req, res) => {
   const userIP = req.clientIp
-  console.log(userIP, '비교요청 들어옴')
   try {
     const worker = await workerManager.getWorker(userIP)
     worker.once('message', async (result) => {
@@ -171,7 +182,7 @@ router.post('/sendSMS', async (req, res) => {
           // pc & mobile 가입링크 같은경우 문자발송
           const sendData = {
             phone,
-            content: `${listArr[i].name} pc & mobile 가입링크\n${listArr[i].pc}`,
+            content: `${listArr[i].name} 컴퓨터, 모바일 가입링크\n${listArr[i].pc}`,
           }
           await sendSENS(sendData)
           await waitTime(1000)
@@ -179,13 +190,13 @@ router.post('/sendSMS', async (req, res) => {
           // pc & mobile 가입링크 다른경우 문자발송
           const sendData1 = {
             phone,
-            content: `${listArr[i].name} pc 가입링크\n${listArr[i].pc}`,
+            content: `${listArr[i].name} 컴퓨터 가입링크\n${listArr[i].pc}`,
           }
           await sendSENS(sendData1)
           await waitTime(1000)
           const sendData2 = {
             phone,
-            content: `${listArr[i].name} mobile 가입링크\n${listArr[i].mobile}`,
+            content: `${listArr[i].name} 모바일 가입링크\n${listArr[i].mobile}`,
           }
           await sendSENS(sendData2)
           await waitTime(1000)

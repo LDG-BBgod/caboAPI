@@ -213,6 +213,7 @@ async function getResult(userId, userData) {
       }
     }
     let versusData = []
+    await page.waitForTimeout(800)
     for (let i = 0; i < 11; i += 1) {
       await page.waitForTimeout(100)
       const rankEL = await page.$(
