@@ -1,0 +1,259 @@
+// @ts-check
+/* eslint-disable no-console */
+const express = require('express')
+const path = require('path')
+const requestIp = require('request-ip')
+
+const { sendSENS } = require('../sens/sens')
+const { insuData } = require('../insuData')
+const { workerManager } = require('../worker/main')
+const { link } = require('fs')
+
+async function waitTime(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
+
+const router = express.Router()
+
+router.get('/pageInit', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, 'init들어옴')
+  try {
+    const worker = await workerManager.getWorker(userIP)
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+    const data = {
+      type: 'pageInit',
+      userIP,
+    }
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/phoneSubmit', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, '인증번호요청 들어옴')
+  try {
+    const worker = await workerManager.getWorker(userIP)
+
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+    const data = {
+      type: 'phoneSubmit',
+      userIP,
+      data: req.body,
+    }
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/authCheck', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, '인증번호 확인 들어옴')
+  try {
+    const worker = await workerManager.getWorker(userIP)
+
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+
+    const data = {
+      type: 'authCheck',
+      userIP,
+      data: req.body,
+    }
+
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/selectCar', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, '자동차 선택 들어옴')
+  try {
+    const worker = await workerManager.getWorker(userIP)
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+    // 실제 데이터 인풋
+    const data = {
+      type: 'selectCar',
+      userIP,
+      data: req.body,
+    }
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/step4Back', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, '자동차 선택 들어옴')
+  try {
+    const worker = await workerManager.getWorker(userIP)
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+    // 실제 데이터 인풋
+    const data = {
+      type: 'step4Back',
+      userIP,
+      data: req.body,
+    }
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/getResult', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, '비교요청 들어옴')
+  try {
+    const worker = await workerManager.getWorker(userIP)
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+    // 실제 데이터 인풋
+    const data = {
+      type: 'getResult',
+      userIP,
+      data: req.body,
+    }
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/shutdown', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, '셧다운 들어옴')
+  try {
+    await workerManager.removeWorker(userIP)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/sendSMS', async (req, res) => {
+  try {
+    const { phone, resData, selectedList, isOnline } = req.body
+
+    const indexs = selectedList.map((item) => {
+      return parseInt(item.match(/\d+/)[0], 10)
+    })
+    const listsIndex = indexs.map((index) => {
+      return resData[index]
+    })
+    const ids = listsIndex.map((item) => item.name)
+    const listArr = insuData.filter((item) => ids.includes(item.id))
+    if (isOnline) {
+      // 가입링크전송
+      for (let i = 0; i < listArr.length; i += 1) {
+        if (listArr[i].pc === listArr[i].mobile) {
+          // pc & mobile 가입링크 같은경우 문자발송
+          const sendData = {
+            phone,
+            content: `${listArr[i].name} pc & mobile 가입링크\n${listArr[i].pc}`,
+          }
+          await sendSENS(sendData)
+          await waitTime(1000)
+        } else {
+          // pc & mobile 가입링크 다른경우 문자발송
+          const sendData1 = {
+            phone,
+            content: `${listArr[i].name} pc 가입링크\n${listArr[i].pc}`,
+          }
+          await sendSENS(sendData1)
+          await waitTime(1000)
+          const sendData2 = {
+            phone,
+            content: `${listArr[i].name} mobile 가입링크\n${listArr[i].mobile}`,
+          }
+          await sendSENS(sendData2)
+          await waitTime(1000)
+        }
+      }
+    } else {
+      // 전화번호 전송
+      for (let i = 0; i < listArr.length; i += 1) {
+        const sendData = {
+          phone,
+          content: `${listArr[i].name} 가입전화번호\n${listArr[i].phone}`,
+        }
+
+        await sendSENS(sendData)
+        await waitTime(1000)
+      }
+    }
+
+    res.send('')
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/sendLink', async (req, res) => {
+  try {
+    const { phone, resData, selectedList, isOnline, isMobile } = req.body
+
+    const indexs = selectedList.map((item) => {
+      return parseInt(item.match(/\d+/)[0], 10)
+    })
+    const listsIndex = indexs.map((index) => {
+      return resData[index]
+    })
+    const ids = listsIndex.map((item) => item.name)
+    const listArr = insuData.filter((item) => ids.includes(item.id))
+    if (isOnline) {
+      const directLink = isMobile ? listArr[0].mobile : listArr[0].pc
+      res.send(directLink)
+    } else {
+      res.send(listArr[0].phone)
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+router.post('/test', async (req, res) => {
+  const userIP = req.clientIp
+  console.log(userIP, '비교요청 들어옴')
+  try {
+    const worker = await workerManager.getWorker(userIP)
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+    // 실제 데이터 인풋
+    const data = {
+      type: 'test',
+      userIP,
+      data: req.body,
+    }
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
+module.exports = router
