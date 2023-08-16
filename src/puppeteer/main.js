@@ -5,7 +5,6 @@ function waitSeconds(number) {
     }, number)
   })
 }
-
 const puppeteer = require('puppeteer')
 
 class PuppeteerManager {

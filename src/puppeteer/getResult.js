@@ -6,7 +6,7 @@ const pixelmatch = require('pixelmatch')
 
 async function getResult(userId, userData) {
   const { page } = await puppeteerManager.getInstance(userId)
-  await page.waitForTimeout(300)
+  await page.waitForTimeout(1000)
   let carInfo = userData
 
   // option 1:대인1  2:대인2  3:대물  4:자손자상  5:무보  6:자차  7:긴급출동  8:물적할증
@@ -203,8 +203,10 @@ async function getResult(userId, userData) {
     }
 
     let existData = []
+
     for (let i = 0; i < 11; i += 1) {
-      const logoImg = PNG.sync.read(fs.readFileSync(`vsimg/INSU${i}.png`))
+      const absoluteFilePath = path.join(__dirname, 'vsimg', `INSU${i}.png`)
+      const logoImg = PNG.sync.read(fs.readFileSync(absoluteFilePath))
       existData[i] = {
         logoImg,
         name: `INSU${i}`,
