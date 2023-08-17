@@ -21,6 +21,9 @@ app.use(express.json())
 app.use(cors(corsOptions))
 app.use(requestIp.mw())
 
+app.get('/api', (req, res) => {
+  res.send('api server')
+})
 // app.use('/user', userRouter)
 app.use('/api/apis', apiRouter)
 app.use('/api/compare', compareRouter)
