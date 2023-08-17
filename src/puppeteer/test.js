@@ -18,7 +18,7 @@ async function test(userId, userData) {
     const pages = await browser.pages()
     const page = pages[0]
     await page.setViewport({ width: 1150, height: 1080 })
-    
+
     // await Promise.race([
     //   page.waitForSelector('div#OO', { visible: true }),
     //   page.waitForSelector('div#AA', { visible: true }),
@@ -103,12 +103,23 @@ async function test(userId, userData) {
     // }
     // return returnData
   } catch (err) {
-    console.log(err)
-    const returnData = {
-      err: true,
-      msg: {},
+    if (
+      err.message.includes(
+        'Navigation failed because browser has disconnected!'
+      )
+    ) {
+      const returnData = {
+        err: false,
+        msg: {},
+      }
+      return returnData
+    } else {
+      const returnData = {
+        err: true,
+        msg: {},
+      }
+      return returnData
     }
-    return returnData
   }
 }
 

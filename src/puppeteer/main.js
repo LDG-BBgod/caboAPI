@@ -18,7 +18,7 @@ class PuppeteerManager {
     let option = null
     if (process.env.IS_DEV === 'true') {
       option = {
-        headless: 'new',
+        headless: false,
         args: [
           '--incognito',
           '--disable-infobars',

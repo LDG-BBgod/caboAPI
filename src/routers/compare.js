@@ -7,7 +7,6 @@ const requestIp = require('request-ip')
 const { sendSENS } = require('../sens/sens')
 const { insuData } = require('../insuData')
 const { workerManager } = require('../worker/main')
-const { link } = require('fs')
 
 async function waitTime(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -156,6 +155,7 @@ router.post('/shutdown', async (req, res) => {
   const userIP = req.clientIp
   console.log(userIP, '셧다운 들어옴')
   try {
+    
     await workerManager.removeWorker(userIP)
   } catch (err) {
     console.error(err)

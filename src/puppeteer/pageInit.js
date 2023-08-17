@@ -42,11 +42,23 @@ async function pageInit(userId) {
     }
     return returnData
   } catch (err) {
-    const returnData = {
-      err: true,
-      msg: {},
+    if (
+      err.message.includes(
+        'Navigation failed because browser has disconnected!'
+      )
+    ) {
+      const returnData = {
+        err: false,
+        msg: {},
+      }
+      return returnData
+    } else {
+      const returnData = {
+        err: true,
+        msg: {},
+      }
+      return returnData
     }
-    return returnData
   }
 }
 

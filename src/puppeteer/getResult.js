@@ -63,7 +63,6 @@ async function getResult(userId, userData) {
   try {
     // 보장선택(운전저범위, 생년월일)
     await page.waitForSelector('#row_9 > td', {
-      visible: true,
       timeout: 5000,
     })
     await page.click('#row_9 > td')
@@ -271,10 +270,22 @@ async function getResult(userId, userData) {
     }
     return returnData
   } catch (err) {
-    console.log(err)
-    const returnData = {
-      err: true,
-      msg: {},
+    if (
+      err.message.includes(
+        'Navigation failed because browser has disconnected!'
+      )
+    ) {
+      const returnData = {
+        err: false,
+        msg: {},
+      }
+      return returnData
+    } else {
+      const returnData = {
+        err: true,
+        msg: {},
+      }
+      return returnData
     }
     return returnData
   }

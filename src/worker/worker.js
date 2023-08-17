@@ -39,7 +39,10 @@ parentPort.on('message', async (message) => {
         result = await test(userIP, data)
         break
       case 'exit':
-        result = await puppeteerManager.releaseInstance(userIP)
+        await puppeteerManager.releaseInstance(userIP)
+        result = {
+          err: false
+        }
         break
       default:
         console.log('워커 케이스 에러')
@@ -51,7 +54,6 @@ parentPort.on('message', async (message) => {
     }
     parentPort.postMessage(result)
   } catch (err) {
-    await puppeteerManager.releaseInstance(userIP)
     const result = {
       err: true,
     }
