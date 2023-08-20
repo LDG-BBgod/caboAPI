@@ -287,7 +287,6 @@ async function getResult(userId, userData) {
       }
       return returnData
     }
-    return returnData
   }
 }
 

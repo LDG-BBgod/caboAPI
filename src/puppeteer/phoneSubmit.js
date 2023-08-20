@@ -190,7 +190,6 @@ async function phoneSubmit(userId, userData) {
       }
       return returnData
     }
-    return returnData
   }
 }
 
