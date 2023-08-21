@@ -134,8 +134,6 @@ async function phoneSubmit(userId, userData) {
         break
     }
 
-
-
     await page.evaluate(() => {
       // 보험다모아에 존재하는 함수
       authCiReq()

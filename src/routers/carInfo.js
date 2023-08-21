@@ -15,7 +15,30 @@ router.post('/option1', async (req, res) => {
       .then((res) => {
         const decodeData = decodeURIComponent(res.data)
         const jsonData = JSON.parse(decodeData).data
-        return jsonData.reverse()
+        
+        const customOrder = ['현대', '기아', '삼성', '외산', '대우', '쌍용']
+        const sortedBrands = [...jsonData].sort((a, b) => {
+          const indexA = customOrder.indexOf(a.nm);
+          const indexB = customOrder.indexOf(b.nm);
+        
+          // 주어진 순서에 따라 정렬
+          if (indexA !== -1 && indexB !== -1) {
+            return indexA - indexB;
+          } else if (indexA !== -1) {
+            return -1;
+          } else if (indexB !== -1) {
+            return 1;
+          }
+          // 두 항목 모두 주어진 순서에 없는 경우, 기타를 맨 마지막으로 배치
+          if (a.nm === '기타') {
+            return 1;
+          } else if (b.nm === '기타') {
+            return -1;
+          }
+          return 0;
+        });
+
+        return sortedBrands
       })
   } catch (err) {
     console.log(err)

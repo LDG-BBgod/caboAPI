@@ -37,16 +37,31 @@ async function authCheck(userId, userData) {
         },
       }
       return returnData
-    } else {
-      const returnData = {
-        err: false,
-        msg: {
-          success: true,
-          text: '',
-        },
-      }
-      return returnData
     }
+
+    // 3년이내 확인
+    await page.waitForTimeout(500)
+    const isStep2 = '#ifArea > div.con02_story.con_new'
+    const elementExists = await page.evaluate((selector) => {
+      const element = document.querySelector(selector)
+      return !!element
+    }, isStep2)
+
+    if (elementExists) {
+      console.log('요소가 페이지에 존재합니다.')
+    } else {
+      console.log('요소가 페이지에 존재하지 않습니다.')
+      // 이경우 3년이내 경우이므로 예외처리 해야함
+    }
+
+    const returnData = {
+      err: false,
+      msg: {
+        success: true,
+        text: '',
+      },
+    }
+    return returnData
   } catch (err) {
     if (
       err.message.includes(

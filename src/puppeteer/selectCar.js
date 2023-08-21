@@ -2,7 +2,7 @@ const { puppeteerManager, waitForBlockUIVisible } = require('./main')
 
 async function selectCar(userId, userData) {
   const { page } = await puppeteerManager.getInstance(userId)
-  await page.waitForTimeout(300)
+  await page.waitForTimeout(500)
   let carInfo = userData
 
   try {
@@ -95,7 +95,6 @@ async function selectCar(userId, userData) {
       },
     }
     return returnData
-    
   } catch (err) {
     if (
       err.message.includes(

@@ -30,7 +30,7 @@ async function sendSENS(data) {
   }
 
   const body = {
-    type: 'SMS',
+    type: 'LMS',
     contentType: 'COMM',
     countryCode: '82',
     from: '01028168229',
