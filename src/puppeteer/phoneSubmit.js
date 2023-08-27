@@ -1,8 +1,11 @@
-const { puppeteerManager, waitForBlockUIVisible } = require('./main')
+const {
+  puppeteerManager,
+  waitForBlockUIVisible,
+  retryForActions,
+} = require('./main')
 
 async function phoneSubmit(userId, userData) {
   const { page } = await puppeteerManager.getInstance(userId)
-  await page.waitForTimeout(300)
   const { name, fsn, bsn, telcom, phone } = userData
   let gender = null
   if (parseInt(bsn.charAt(0)) % 2 === 0) {
@@ -14,7 +17,15 @@ async function phoneSubmit(userId, userData) {
   const phone2 = phone.substring(3, 7)
   const phone3 = phone.substring(7)
   const nation = '내국인'
+  let returnData = {
+    err: false,
+    msg: {
+      success: true,
+      text: '',
+    },
+  }
 
+  await page.waitForTimeout(300)
   try {
     await page.evaluate(() => {
       document.getElementById('name').value = ''
@@ -133,12 +144,12 @@ async function phoneSubmit(userId, userData) {
         console.log('폰번1선택에러')
         break
     }
-
     await page.evaluate(() => {
-      // 보험다모아에 존재하는 함수
       authCiReq()
     })
     await waitForBlockUIVisible(page)
+
+    // 에러 발생 체크
     let elements = null
     elements = await page.evaluate(() => {
       try {
@@ -152,42 +163,19 @@ async function phoneSubmit(userId, userData) {
       await page.evaluate(() => {
         document.getElementsByClassName('ui-button-text')[0].click()
       })
-      const returnData = {
-        err: false,
-        msg: {
-          success: false,
-          text: '',
-        },
-      }
-      return returnData
-    } else {
-      const returnData = {
-        err: false,
-        msg: {
-          success: true,
-          text: '',
-        },
-      }
-      return returnData
+      returnData.msg.success = false
     }
+
+    // 모든작업 성공시
+    return returnData
   } catch (err) {
-    if (
-      err.message.includes(
-        'Navigation failed because browser has disconnected!'
-      )
-    ) {
-      const returnData = {
-        err: false,
-        msg: {},
-      }
-      return returnData
-    } else {
-      const returnData = {
-        err: true,
-        msg: {},
-      }
-      return returnData
+    const isDisconnected = err.message.includes(
+      'Navigation failed because browser has disconnected!'
+    )
+    if (!isDisconnected) {
+      returnData.err = true
     }
+    return returnData
   }
 }
 

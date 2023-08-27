@@ -2,8 +2,15 @@ const { puppeteerManager, waitForBlockUIVisible } = require('./main')
 
 async function selectCar(userId, userData) {
   const { page } = await puppeteerManager.getInstance(userId)
-  await page.waitForTimeout(500)
   let carInfo = userData
+  let returnData = {
+    err: false,
+    msg: {
+      success: true,
+      text: '',
+    },
+  }
+  await page.waitForTimeout(500)
 
   try {
     // 오늘 날짜 선택 화면
@@ -87,32 +94,15 @@ async function selectCar(userId, userData) {
     })
     await waitForBlockUIVisible(page)
 
-    const returnData = {
-      err: false,
-      msg: {
-        success: true,
-        text: '',
-      },
-    }
     return returnData
   } catch (err) {
-    if (
-      err.message.includes(
-        'Navigation failed because browser has disconnected!'
-      )
-    ) {
-      const returnData = {
-        err: false,
-        msg: {},
-      }
-      return returnData
-    } else {
-      const returnData = {
-        err: true,
-        msg: {},
-      }
-      return returnData
+    const isDisconnected = err.message.includes(
+      'Navigation failed because browser has disconnected!'
+    )
+    if (!isDisconnected) {
+      returnData.err = true
     }
+    return returnData
   }
 }
 

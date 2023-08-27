@@ -8,7 +8,7 @@ async function getResult(userId, userData) {
   const { page } = await puppeteerManager.getInstance(userId)
   await page.waitForTimeout(1000)
   let carInfo = userData
-
+  
   // option 1:대인1  2:대인2  3:대물  4:자손자상  5:무보  6:자차  7:긴급출동  8:물적할증
   switch (carInfo.level) {
     case 'level1':

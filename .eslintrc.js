@@ -10,6 +10,9 @@ module.exports = {
     'no-loop-func': 'off',
     'no-lonely-if': 'off',
     'no-unused-expressions': 'off',
-    'no-restricted-syntax': 'off'
+    'no-restricted-syntax': 'off',
+    'no-plusplus': 'off',
+    'prefer-const': 'off',
+    'radix': 'off',
   },
 }

@@ -1,9 +1,20 @@
-const { puppeteerManager, waitForBlockUIVisible } = require('./main')
+const {
+  puppeteerManager,
+  waitForBlockUIVisible,
+  retryForActions,
+} = require('./main')
 
 async function authCheck(userId, userData) {
   const { page } = await puppeteerManager.getInstance(userId)
-  await page.waitForTimeout(300)
   const { authNum } = userData
+  let returnData = {
+    err: false,
+    msg: {
+      success: true,
+      text: '',
+    },
+  }
+  await page.waitForTimeout(300)
 
   try {
     await page.evaluate(() => {
@@ -11,11 +22,11 @@ async function authCheck(userId, userData) {
     })
     await page.type('#authNumber', authNum)
     await page.evaluate(() => {
-      // 보험다모아에 존재하는 함수
       authNoMachReq()
     })
     await waitForBlockUIVisible(page)
 
+    // 에러체크
     let elements = null
     elements = await page.evaluate(() => {
       try {
@@ -29,57 +40,38 @@ async function authCheck(userId, userData) {
       await page.evaluate(() => {
         document.getElementsByClassName('ui-button-text')[0].click()
       })
-      const returnData = {
-        err: false,
-        msg: {
-          success: false,
-          text: '',
-        },
-      }
+      returnData.msg.success = false
       return returnData
     }
 
     // 3년이내 확인
-    await page.waitForTimeout(500)
     const isStep2 = '#ifArea > div.con02_story.con_new'
-    const elementExists = await page.evaluate((selector) => {
-      const element = document.querySelector(selector)
-      return !!element
-    }, isStep2)
-
-    if (elementExists) {
-      console.log('요소가 페이지에 존재합니다.')
-    } else {
-      console.log('요소가 페이지에 존재하지 않습니다.')
+    try {
+      await page.waitForSelector(isStep2, { timeout: 5000 })
+    } catch (error) {
+      console.error('요소가 나타나지 않았거나 타임아웃이 발생했습니다.')
       // 이경우 3년이내 경우이므로 예외처리 해야함
     }
-
-    const returnData = {
-      err: false,
-      msg: {
-        success: true,
-        text: '',
-      },
+    const check3Year = async () => {
+      const isStep2 = '#ifArea > div.con02_story.con_new'
+      await page.waitForSelector(isStep2, { timeout: 200 })
     }
+    if (await retryForActions(page, check3Year)) {
+      returnData.msg.success = false
+      returnData.msg.text = '3년'
+      return returnData
+    }
+
+    // 모든작업 성공시
     return returnData
   } catch (err) {
-    if (
-      err.message.includes(
-        'Navigation failed because browser has disconnected!'
-      )
-    ) {
-      const returnData = {
-        err: false,
-        msg: {},
-      }
-      return returnData
-    } else {
-      const returnData = {
-        err: true,
-        msg: {},
-      }
-      return returnData
+    const isDisconnected = err.message.includes(
+      'Navigation failed because browser has disconnected!'
+    )
+    if (!isDisconnected) {
+      returnData.err = true
     }
+    return returnData
   }
 }
 

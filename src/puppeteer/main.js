@@ -144,9 +144,24 @@ async function waitForBlockUIVisible(page) {
   }
 }
 
+// 보험다모아 재시도 함수
+async function retryForActions(page, Func) {
+  for (let retry = 1; retry <= 3; retry++) {
+    console.log('시도', retry, ' : ', Func)
+    try {
+      await Func()
+      return false
+    } catch (err) {
+      await page.waitForTimeout(333)
+    }
+  }
+  return true
+}
+
 const puppeteerManager = new PuppeteerManager()
 
 module.exports = {
   puppeteerManager,
   waitForBlockUIVisible,
+  retryForActions,
 }
