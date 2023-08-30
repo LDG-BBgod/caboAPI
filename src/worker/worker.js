@@ -54,6 +54,7 @@ parentPort.on('message', async (message) => {
     }
     parentPort.postMessage(result)
   } catch (err) {
+    console.log(userIP, type, '워커처리중 에러발생',)
     const result = {
       err: true,
     }
