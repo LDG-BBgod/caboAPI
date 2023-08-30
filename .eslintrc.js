@@ -14,5 +14,7 @@ module.exports = {
     'no-plusplus': 'off',
     'prefer-const': 'off',
     'radix': 'off',
+    'guard-for-in': 'off',
+    'prefer-destructuring': 'off',
   },
 }
