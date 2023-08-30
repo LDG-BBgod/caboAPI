@@ -17,8 +17,8 @@ const router = express.Router()
 let isWorkerRunning = false
 let queuedResponse = null
 
-router.get('/pageInit', async (req, res) => {
-  const userIP = req.clientIp
+router.post('/pageInit', async (req, res) => {
+  const userIP = req.body.pid
   if (isWorkerRunning) {
     queuedResponse = res
     return
@@ -50,7 +50,7 @@ router.get('/pageInit', async (req, res) => {
 })
 
 router.post('/phoneSubmit', async (req, res) => {
-  const userIP = req.clientIp
+  const userIP = req.body.pid
   try {
     const worker = await workerManager.getWorker(userIP)
 
@@ -70,7 +70,7 @@ router.post('/phoneSubmit', async (req, res) => {
 })
 
 router.post('/authCheck', async (req, res) => {
-  const userIP = req.clientIp
+  const userIP = req.body.pid
   try {
     const worker = await workerManager.getWorker(userIP)
 
@@ -92,7 +92,7 @@ router.post('/authCheck', async (req, res) => {
 })
 
 router.post('/selectCar', async (req, res) => {
-  const userIP = req.clientIp
+  const userIP = req.body.pid
   try {
     const worker = await workerManager.getWorker(userIP)
     worker.once('message', async (result) => {
@@ -112,7 +112,7 @@ router.post('/selectCar', async (req, res) => {
 })
 
 router.post('/step4Back', async (req, res) => {
-  const userIP = req.clientIp
+  const userIP = req.body.pid
   try {
     const worker = await workerManager.getWorker(userIP)
     worker.once('message', async (result) => {
@@ -132,7 +132,7 @@ router.post('/step4Back', async (req, res) => {
 })
 
 router.post('/getResult', async (req, res) => {
-  const userIP = req.clientIp
+  const userIP = req.body.pid
   try {
     const worker = await workerManager.getWorker(userIP)
     worker.once('message', async (result) => {
@@ -152,10 +152,9 @@ router.post('/getResult', async (req, res) => {
 })
 
 router.post('/shutdown', async (req, res) => {
-  const userIP = req.clientIp
+  const userIP = req.body.pid
   console.log(userIP, '셧다운 들어옴')
   try {
-    
     await workerManager.removeWorker(userIP)
   } catch (err) {
     console.error(err)
@@ -247,7 +246,7 @@ router.post('/sendLink', async (req, res) => {
 })
 
 router.post('/test', async (req, res) => {
-  const userIP = req.clientIp
+  const userIP = req.body.pid
   console.log(userIP, '비교요청 들어옴')
   try {
     const worker = await workerManager.getWorker(userIP)

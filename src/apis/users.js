@@ -12,7 +12,7 @@ const userCreate = async (req, res) => {
   const { pid } = req.body
   const existingUser = await User.findOne({ pid })
   try {
-    if (!existingUser) {
+    if (!existingUser && pid !== 'undef') {
       const decryptPID = decrypt(pid)
       const match = decryptPID.match(/^([가-힣a-zA-Z]+)(\d+)$/)
       const name = match[1]
@@ -25,7 +25,7 @@ const userCreate = async (req, res) => {
       await newUser.save()
     }
   } catch (err) {
-    console.log('')
+    console.log('pid없음')
   }
   res.send('')
 }
