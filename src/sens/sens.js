@@ -1,8 +1,8 @@
 const crypto = require('crypto')
 const axios = require('axios')
 
-function getSigningKey() {
-  const timestamp = Date.now().toString()
+function getSigningKey(ts) {
+  const timestamp = ts
   const AccessKey = 'Lyf4UlLYnAqvptuxG9Oq' //변경예정
   const SecretKey = 'O8DxN19g9zaRZ335Wgx5FCzQfXPIbZfkLR5dng4C' //변경예정
 
@@ -14,13 +14,12 @@ function getSigningKey() {
     .createHmac('sha256', SecretKey)
     .update(message)
     .digest('base64')
-
   return signingKey
 }
 
 async function sendSENS(data) {
   const timestamp = Date.now().toString()
-  const signingKey = getSigningKey()
+  const signingKey = getSigningKey(timestamp)
 
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
@@ -49,6 +48,7 @@ async function sendSENS(data) {
       { headers }
     )
   } catch (error) {
+    console.log('요기에러~')
     console.error(error)
   }
 }

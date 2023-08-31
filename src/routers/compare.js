@@ -198,6 +198,7 @@ router.post('/sendSMS', async (req, res) => {
     const listArr = insuData.filter((item) => ids.includes(item.id))
     if (isOnline) {
       // 가입링크전송
+
       for (let i = 0; i < listArr.length; i += 1) {
         if (listArr[i].pc === listArr[i].mobile) {
           // pc & mobile 가입링크 같은경우 문자발송
@@ -206,7 +207,7 @@ router.post('/sendSMS', async (req, res) => {
             content: `${listArr[i].name} 가입링크\n${listArr[i].pc}`,
           }
           await sendSENS(sendData)
-          await waitTime(1000)
+          await waitTime(2000)
         } else {
           // pc & mobile 가입링크 다른경우 문자발송
           const sendData1 = {
@@ -214,13 +215,13 @@ router.post('/sendSMS', async (req, res) => {
             content: `${listArr[i].name} 컴퓨터 가입링크\n${listArr[i].pc}`,
           }
           await sendSENS(sendData1)
-          await waitTime(1000)
+          await waitTime(2000)
           const sendData2 = {
             phone,
             content: `${listArr[i].name} 모바일 가입링크\n${listArr[i].mobile}`,
           }
           await sendSENS(sendData2)
-          await waitTime(1000)
+          await waitTime(2000)
         }
       }
     } else {
