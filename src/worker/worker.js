@@ -3,6 +3,7 @@ const { puppeteerManager } = require('../puppeteer/main')
 
 const { pageInit } = require('../puppeteer/pageInit')
 const { phoneSubmit } = require('../puppeteer/phoneSubmit')
+const { reSendAuth } = require('../puppeteer/reSendAuth')
 const { authCheck } = require('../puppeteer/authCheck')
 const { getResult } = require('../puppeteer/getResult')
 const { selectCar } = require('../puppeteer/selectCar')
@@ -21,6 +22,9 @@ parentPort.on('message', async (message) => {
         break
       case 'phoneSubmit':
         result = await phoneSubmit(userIP, data)
+        break
+      case 'reSendAuth':
+        result = await reSendAuth(userIP, data)
         break
       case 'authCheck':
         result = await authCheck(userIP, data)
@@ -41,7 +45,7 @@ parentPort.on('message', async (message) => {
       case 'exit':
         await puppeteerManager.releaseInstance(userIP)
         result = {
-          err: false
+          err: false,
         }
         break
       default:
@@ -54,7 +58,7 @@ parentPort.on('message', async (message) => {
     }
     parentPort.postMessage(result)
   } catch (err) {
-    console.log(userIP, type, '워커처리중 에러발생',)
+    console.log(userIP, type, '워커처리중 에러발생')
     const result = {
       err: true,
     }

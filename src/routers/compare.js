@@ -69,6 +69,28 @@ router.post('/phoneSubmit', async (req, res) => {
   }
 })
 
+router.post('/reSendAuth', async (req, res) => {
+  const userIP = req.body.pid
+  try {
+    const worker = await workerManager.getWorker(userIP)
+
+    worker.once('message', async (result) => {
+      res.send(result)
+    })
+
+    const data = {
+      type: 'reSendAuth',
+      userIP,
+      data: req.body,
+    }
+
+    worker.postMessage(data)
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('에러 발생')
+  }
+})
+
 router.post('/authCheck', async (req, res) => {
   const userIP = req.body.pid
   try {
