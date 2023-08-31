@@ -203,7 +203,7 @@ router.post('/sendSMS', async (req, res) => {
           // pc & mobile 가입링크 같은경우 문자발송
           const sendData = {
             phone,
-            content: `${listArr[i].name} 컴퓨터, 모바일 가입링크\n${listArr[i].pc}`,
+            content: `${listArr[i].name} 가입링크\n${listArr[i].pc}`,
           }
           await sendSENS(sendData)
           await waitTime(1000)

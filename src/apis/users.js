@@ -73,16 +73,16 @@ const userUpdate = async (req, res) => {
           user.customer.push({
             register: formattedDate,
             csname: data.csname,
-            phoneAuth: data.phoneAuth,
+            phoneAuth: data.phoneAuth.slice(-4),
             fsn: data.fsn,
-            bsn: data.bsn,
+            bsn: data.bsn.slice(0, 1),
             list: formattedList,
           })
           await user.save()
           break
         case 'sendContent':
           const csname = data.csname
-          const phoneSend = data.phoneSend
+          const phoneSend = data.phoneSend.slice(-4)
           const insuType = data.insuType ? 'CM' : 'TM'
           const list = data.insuList.map((item) => company[item] || item)
           const insuList = JSON.stringify(list)
