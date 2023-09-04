@@ -3,11 +3,12 @@ const axios = require('axios')
 
 function getSigningKey(ts) {
   const timestamp = ts
-  const AccessKey = 'Lyf4UlLYnAqvptuxG9Oq' //변경예정
-  const SecretKey = 'O8DxN19g9zaRZ335Wgx5FCzQfXPIbZfkLR5dng4C' //변경예정
+  const AccessKey = '1gUeu71dUBQKfuKIh2fW'
+  const SecretKey = 'LPH3SXDuS2WhHdSNZCBzjXcQOmvIkukGjH04inCe'
 
   const method = 'POST'
-  const uri = '/sms/v2/services/ncp:sms:kr:289661491399:cabo/messages'
+  const uri =
+    '/sms/v2/services/ncp:sms:kr:274620864620:smartcabo_sendpidlink/messages'
 
   const message = `${method} ${uri}\n${timestamp}\n${AccessKey}`
   const signingKey = crypto
@@ -17,22 +18,22 @@ function getSigningKey(ts) {
   return signingKey
 }
 
-async function sendSENS(data) {
+async function sendSENSLDJ(data) {
   const timestamp = Date.now().toString()
   const signingKey = getSigningKey(timestamp)
 
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'x-ncp-apigw-timestamp': timestamp,
-    'x-ncp-iam-access-key': 'Lyf4UlLYnAqvptuxG9Oq',
+    'x-ncp-iam-access-key': '1gUeu71dUBQKfuKIh2fW',
     'x-ncp-apigw-signature-v2': signingKey,
   }
 
   const body = {
-    type: 'LMS',
+    type: data.type,
     contentType: 'COMM',
     countryCode: '82',
-    from: '01028168229',
+    from: '01077702696',
     content: data.content,
     messages: [
       {
@@ -43,7 +44,7 @@ async function sendSENS(data) {
 
   try {
     const response = await axios.post(
-      'https://sens.apigw.ntruss.com/sms/v2/services/ncp:sms:kr:289661491399:cabo/messages',
+      'https://sens.apigw.ntruss.com/sms/v2/services/ncp:sms:kr:274620864620:smartcabo_sendpidlink/messages',
       body,
       { headers }
     )
@@ -52,9 +53,6 @@ async function sendSENS(data) {
   }
 }
 
-
-
-
 module.exports = {
-  sendSENS,
+  sendSENSLDJ,
 }

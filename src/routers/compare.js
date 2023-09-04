@@ -233,7 +233,7 @@ router.post('/sendSMS', async (req, res) => {
         }
 
         await sendSENS(sendData)
-        await waitTime(1000)
+        await waitTime(2000)
       }
     }
 
