@@ -38,7 +38,6 @@ router.post('/getDetail', async (req, res) => {
   } catch (err) {
     console.log(err)
   }
-  console.log(resData)
   res.send(resData)
 })
 module.exports = router
