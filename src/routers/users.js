@@ -28,7 +28,7 @@ router.post('/pid', (req, res) => {
   try {
     const originalString = req.body.name + req.body.phone
     const encryptedString = encrypt(originalString)
-    const dtype = req.body.type === '6' ? 'A' : 'B'
+    const dtype = req.body.type === '6' ? 'sistype' : 'eletype'
     resString = `https://www.smartcabo.co.kr/mo?dtype=${dtype}&pid=${encryptedString}`
   } catch (err) {
     resString = `pid생성에러`
