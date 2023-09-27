@@ -76,6 +76,23 @@ const userUpdate = async (req, res) => {
             phoneAuth: data.phoneAuth.slice(-4),
             fsn: data.fsn,
             bsn: data.bsn.slice(0, 1),
+            carValue1: data.carValue1,
+            carValue2: data.carValue2,
+            carValue3: data.carValue3,
+            carValue4: data.carValue4,
+            carValue5: data.carValue5,
+            range: data.range,
+            minBirth: data.minBirth,
+            secondBirth: data.secondBirth,
+            level: data.level,
+            option1: data.option1,
+            option2: data.option2,
+            option3: data.option3,
+            option4: data.option4,
+            option5: data.option5,
+            option6: data.option6,
+            option7: data.option7,
+            option8: data.option8,
             list: formattedList,
           })
           await user.save()
@@ -130,7 +147,6 @@ const userUpdateCustomer = async (req, res) => {
   }
   res.send('')
 }
-
 module.exports = {
   userCreate,
   userUpdate,

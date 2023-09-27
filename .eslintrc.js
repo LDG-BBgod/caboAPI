@@ -13,8 +13,9 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-plusplus': 'off',
     'prefer-const': 'off',
-    'radix': 'off',
+    radix: 'off',
     'guard-for-in': 'off',
     'prefer-destructuring': 'off',
+    'node/no-unsupported-features/es-syntax': 'off',
   },
 }
