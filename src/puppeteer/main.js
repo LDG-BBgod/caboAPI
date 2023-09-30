@@ -11,7 +11,7 @@ class PuppeteerManager {
   constructor() {
     this.instances = null
     this.pendingInstances = false
-    console.log('puppeteer 매니저가 생성되었습니다')
+    // console.log('puppeteer 매니저가 생성되었습니다')
   }
 
   async createInstance(userId) {
@@ -147,11 +147,11 @@ async function waitForBlockUIVisible(page) {
 // 보험다모아 재시도 함수
 async function retryForActions(page, Func) {
   for (let retry = 1; retry <= 3; retry++) {
-    console.log('시도', retry, ' : ', Func)
     try {
       await Func()
       return false
     } catch (err) {
+      console.log('실행실패', retry, ' : ', Func)
       await page.waitForTimeout(333)
     }
   }

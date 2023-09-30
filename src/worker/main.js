@@ -4,13 +4,13 @@ const path = require('path')
 class WorkerManager {
   constructor() {
     this.workers = new Map()
-    this.workerTimeout = 20 * 60000 //생명주기 20분
-    console.log('워커 매니저가 생성되었습니다.')
+    this.workerTimeout = 1 * 60000 //생명주기 20분
+    // console.log('워커 매니저가 생성되었습니다.')
   }
 
   async createWorker(userId) {
     const worker = new Worker(__dirname + '/worker.js')
-    console.log('워커가 생성되었습니다.', userId)
+    console.log(userId, '워커가 생성되었습니다.')
 
     return worker
   }
@@ -37,6 +37,8 @@ class WorkerManager {
         console.log(userId, '워커종료')
       })
       worker.postMessage({ type: 'exit', userIP: userId, data: {} })
+    } else {
+      console.log(userId, '이미 종료된 워커')
     }
   }
 
@@ -47,7 +49,7 @@ class WorkerManager {
         worker.once('message', async () => {
           worker.terminate()
           this.workers.delete(userId)
-          console.log('워커종료')
+          console.log(userId, '워커종료')
         })
       }
     })

@@ -52,7 +52,8 @@ parentPort.on('message', async (message) => {
         console.log('워커 케이스 에러')
         break
     }
-    console.log(userIP, type, '처리완료', result)
+    console.log(userIP, type, '처리완료 ', '[ 에러 :', result.err, ']')
+
     if (result.err) {
       await puppeteerManager.releaseInstance(userIP)
     }

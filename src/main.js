@@ -40,11 +40,4 @@ app.listen(PORT, () => {
   console.log(`PORT = ${PORT}`)
 })
 
-// const heapdump = require('heapdump')
-// heapdump.writeSnapshot((err, filename) => {
-//   if (err) {
-//     console.error('Error creating heap snapshot:', err)
-//   } else {
-//     console.log('Heap snapshot created:', filename)
-//   }
-// })
+
