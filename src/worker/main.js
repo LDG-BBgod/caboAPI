@@ -4,7 +4,7 @@ const path = require('path')
 class WorkerManager {
   constructor() {
     this.workers = new Map()
-    this.workerTimeout = 1 * 60000 //생명주기 20분
+    this.workerTimeout = 20 * 60000 //생명주기 20분
     // console.log('워커 매니저가 생성되었습니다.')
   }
 
