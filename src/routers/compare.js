@@ -20,7 +20,7 @@ wss.on('connection', (ws, req) => {
   console.log(wsId, '웹소켓 연결')
 
   ws.on('close', async () => {
-    console.log(wsId, '웹소켓 연결해제 shutdown 진입')
+    console.log(wsId, '웹소켓 연결해제 및 shutdown 진입')
     const userIP = wsId
     try {
       await workerManager.removeWorker(userIP)
