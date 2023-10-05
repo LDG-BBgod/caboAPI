@@ -6,6 +6,7 @@ function waitSeconds(number) {
   })
 }
 const puppeteer = require('puppeteer')
+const Xvfb = require('xvfb')
 
 class PuppeteerManager {
   constructor() {
@@ -22,6 +23,7 @@ class PuppeteerManager {
         // executablePath:
         //   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         args: [
+          '--remote-debugging-port=9224',
           '--incognito',
           '--no-sandbox',
           '--disable-infobars',
@@ -32,44 +34,61 @@ class PuppeteerManager {
       }
     } else {
       option = {
-        headless: 'new',
+        // headless: 'new',
+        headless: false,
         executablePath: '/usr/bin/chromium-browser',
         args: [
-          '--remote-debugging-port=9222',
+          '--remote-debugging-port=9224',
           '--incognito',
-          '--no-zygote',
-          '--mute-audio',
           '--no-sandbox',
-          '--disable-gpu',
-          '--no-first-run',
-          '--single-process',
-          '--hide-scrollbars',
-          '--disable-breakpad',
           '--disable-infobars',
-          '--disable-extensions',
           '--disable-dev-shm-usage',
-          '--disable-notifications',
-          '--disable-dev-shm-usage',
-          '--metrics-recording-only',
-          '--disable-setuid-sandbox',
-          '--force-color-profile=srgb',
-          '--ignore-certificate-errors',
-          '--disable-accelerated-2d-canvas',
-          '--disable-renderer-backgrounding',
-          '--disable-ipc-flooding-protection',
-          '--ignore-certificate-errors-skip-list',
-          '--disable-background-timer-throttling',
           '--disable-features=AutomationControlled',
-          '--disable-backgrounding-occluded-windows',
-          '--disable-component-extensions-with-background-pages',
-          '--disable-features=TranslateUI,BlinkGenPropertyTrees',
-          '--enable-features=NetworkService,NetworkServiceInProcess',
+          // '--remote-debugging-port=9224',
+          // '--incognito',
+          // '--no-zygote',
+          // '--mute-audio',
+          // '--no-sandbox',
+          // '--disable-gpu',
+          // '--no-first-run',
+          // '--single-process',
+          // '--hide-scrollbars',
+          // '--disable-breakpad',
+          // '--disable-infobars',
+          // '--disable-extensions',
+          // '--disable-dev-shm-usage',
+          // '--disable-notifications',
+          // '--disable-dev-shm-usage',
+          // '--metrics-recording-only',
+          // '--disable-setuid-sandbox',
+          // '--force-color-profile=srgb',
+          // '--ignore-certificate-errors',
+          // '--disable-accelerated-2d-canvas',
+          // '--disable-renderer-backgrounding',
+          // '--disable-ipc-flooding-protection',
+          // '--ignore-certificate-errors-skip-list',
+          // '--disable-background-timer-throttling',
+          // '--disable-features=AutomationControlled',
+          // '--disable-backgrounding-occluded-windows',
+          // '--disable-component-extensions-with-background-pages',
+          // '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+          // '--enable-features=NetworkService,NetworkServiceInProcess',
         ],
         ignoreDefaultArgs: ['--enable-automation'],
       }
     }
 
     const pendingPromise = async () => {
+      // const xvfb = new Xvfb({
+      //   silent: true,
+      //   xvfb_args: ['-screen', '0', '1280x720x24', '-ac'],
+      // })
+      // xvfb.start((err) => {
+      //   if (err) console.error(err)
+      // })
+
+      // option.args.push(`--display=${xvfb._display}`)
+
       const browser = await puppeteer.launch(option)
       const pages = await browser.pages()
       const page = pages[0]

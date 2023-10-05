@@ -148,11 +148,11 @@ async function phoneSubmit(userId, userData) {
       authCiReq()
     })
     await waitForBlockUIVisible(page)
+
     // 에러페이지 이동 체크
     const isInputVisible = await page.$('authNumber')
     if(!isInputVisible) {
-      returnData.err = true
-      return returnData
+      console.log('인증번호 못받음 에러남')
     }
 
     // 입력 오류 에러 체크
