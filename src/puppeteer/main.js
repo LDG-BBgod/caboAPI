@@ -6,7 +6,6 @@ function waitSeconds(number) {
   })
 }
 const puppeteer = require('puppeteer')
-const Xvfb = require('xvfb')
 
 class PuppeteerManager {
   constructor() {
