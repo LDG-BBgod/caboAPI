@@ -36,6 +36,7 @@ async function selectCar(userId, userData) {
     await waitForBlockUIVisible(page)
 
     // // 차량정보 선택화면(5가지)
+    // 제조사
     await page.evaluate((data) => {
       const inputs = document.getElementsByName('iMaker')
       for (const input of inputs) {
@@ -45,54 +46,143 @@ async function selectCar(userId, userData) {
       }
     }, carInfo.carValue1)
     await waitForBlockUIVisible(page)
-    await page.waitForTimeout(100)
+    await page.waitForTimeout(200)
 
-    await page.evaluate((data) => {
-      const inputs = document.getElementsByName('iCarName')
-      for (const input of inputs) {
-        if (input.value.includes(data)) {
-          input.click()
+    // 자동차명
+    try {
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iCarName')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
         }
-      }
-    }, carInfo.carValue2)
+      }, carInfo.carValue2)
+
+    } catch {
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iMaker')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue1)
+      await waitForBlockUIVisible(page)
+      await page.waitForTimeout(200)
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iCarName')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue2)
+    }
     await waitForBlockUIVisible(page)
-    await page.waitForTimeout(100)
-
-    await page.evaluate((data) => {
-      const inputs = document.getElementsByName('iMadeym')
-      for (const input of inputs) {
-        if (input.value.includes(data)) {
-          input.click()
+    await page.waitForTimeout(200)
+    // 등록년도
+    try{
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iMadeym')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
         }
-      }
-    }, carInfo.carValue3)
+      }, carInfo.carValue3)
+    }catch{
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iCarName')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue2)
+      await waitForBlockUIVisible(page)
+      await page.waitForTimeout(200)
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iMadeym')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue3)
+    }
     await waitForBlockUIVisible(page)
-    await page.waitForTimeout(100)
+    await page.waitForTimeout(200)
 
-    await page.evaluate((data) => {
-      const inputs = document.getElementsByName('iCarNameDtl')
-      for (const input of inputs) {
-        if (input.value.includes(data)) {
-          input.click()
+    // 세부차명
+    try{
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iCarNameDtl')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
         }
-      }
-    }, carInfo.carValue4)
+      }, carInfo.carValue4)
+    }catch{
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iMadeym')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue3)
+      await waitForBlockUIVisible(page)
+      await page.waitForTimeout(200)
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iCarNameDtl')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue4)
+    }
     await waitForBlockUIVisible(page)
-    await page.waitForTimeout(100)
+    await page.waitForTimeout(200)
 
-    await page.evaluate((data) => {
-      const inputs = document.getElementsByName('iOptionDtl')
-      for (const input of inputs) {
-        if (input.value.includes(data)) {
-          input.click()
+    // 세부항목
+    try{
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iOptionDtl')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
         }
-      }
-    }, carInfo.carValue5)
+      }, carInfo.carValue5)
+    }catch{
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iCarNameDtl')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue4)
+      await waitForBlockUIVisible(page)
+      await page.waitForTimeout(200)
+      await page.evaluate((data) => {
+        const inputs = document.getElementsByName('iOptionDtl')
+        for (const input of inputs) {
+          if (input.value.includes(data)) {
+            input.click()
+          }
+        }
+      }, carInfo.carValue5)
+    }
 
     await page.evaluate(() => {
       setParam('1')
     })
     await waitForBlockUIVisible(page)
+    await page.waitForTimeout(200)
 
     return returnData
   } catch (err) {

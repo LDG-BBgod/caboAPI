@@ -19,8 +19,11 @@ class PuppeteerManager {
     if (process.env.IS_DEV === 'true') {
       option = {
         headless: false,
+        // executablePath:
+        //   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         args: [
           '--incognito',
+          '--no-sandbox',
           '--disable-infobars',
           '--disable-dev-shm-usage',
           '--disable-features=AutomationControlled',
@@ -32,6 +35,7 @@ class PuppeteerManager {
         headless: 'new',
         executablePath: '/usr/bin/chromium-browser',
         args: [
+          '--remote-debugging-port=9222',
           '--incognito',
           '--no-zygote',
           '--mute-audio',

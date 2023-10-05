@@ -148,8 +148,14 @@ async function phoneSubmit(userId, userData) {
       authCiReq()
     })
     await waitForBlockUIVisible(page)
+    // 에러페이지 이동 체크
+    const isInputVisible = await page.$('authNumber')
+    if(!isInputVisible) {
+      returnData.err = true
+      return returnData
+    }
 
-    // 에러 발생 체크
+    // 입력 오류 에러 체크
     let elements = null
     elements = await page.evaluate(() => {
       try {
