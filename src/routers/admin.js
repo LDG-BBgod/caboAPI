@@ -12,13 +12,16 @@ router.post('/getName', async (req, res) => {
   let isTrue = false
   id === 'padzz321' && pw === 'ldg8410229!' ? (isTrue = true) : (isTrue = false)
   const resData = {
-    name: [],
+    data: [],
   }
   try {
     if (isTrue) {
       const allUser = await User.find()
       allUser.forEach((item) => {
-        resData.name.push(item.name)
+        resData.data.push({
+          name: item.name,
+          isLooked: item.isLooked,
+        })
       })
     }
   } catch (err) {
@@ -34,6 +37,8 @@ router.post('/getDetail', async (req, res) => {
   try {
     if (isTrue) {
       resData = await User.findOne({ name })
+      resData.isLooked = true
+      await resData.save()
     }
   } catch (err) {
     console.log(err)

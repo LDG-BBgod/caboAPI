@@ -58,6 +58,7 @@ const userUpdate = async (req, res) => {
       switch (type) {
         case 'log':
           user.log += `${formattedDate} ${data}\n`
+          user.isLooked = false
           await user.save()
           break
         case 'customer':

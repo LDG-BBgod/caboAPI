@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const User = new mongoose.Schema({
+  isLooked: { type: Boolean, default: true, required: false },
   pid: { type: String, default: '', required: true, unique: true },
   name: { type: String, default: '', required: false },
   phone: { type: String, default: '', required: false },
