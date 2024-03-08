@@ -12,9 +12,7 @@ const userLog = async (req, res) => {
   try {
     const userIp = req.ip
     const { log } = req.body
-    console.log('아이피 일치 유저 찾기 시작 ip : ', userIp)
     const existingUser = await TempUser.findOne({ userIp })
-    console.log('찾고 다음간계 진행')
     if (existingUser) {
       existingUser.log += `${formattedDate} ${log}\n`
       await existingUser.save()
@@ -26,7 +24,7 @@ const userLog = async (req, res) => {
       await newUser.save()
     }
   } catch (err) {
-    console.error('기록 중 에러 발생 : ', err)
+    console.error(err)
   }
   res.send('')
 }
