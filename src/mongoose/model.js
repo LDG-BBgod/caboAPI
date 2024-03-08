@@ -16,11 +16,8 @@ const model = (() => {
     //   console.error('Error updating existing documents:', error);
     // }
   })
-  console.log(
-    `mongodb+srv://${process.env.MONGO_ID}:${process.env.MONGO_PW}@smartcabo.ot2ea6n.mongodb.net/smartcabo`
-  )
   mongoose.connect(
-    `mongodb+srv://${process.env.MONGO_ID}:${process.env.MONGO_PW}@smartcabo.ot2ea6n.mongodb.net/smartcabo`,
+    `mongodb+srv://padzz321:ldg8410229@smartcabo.ot2ea6n.mongodb.net/smartcabo`,
 
     {
       useNewUrlParser: true,
