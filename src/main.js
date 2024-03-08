@@ -11,13 +11,14 @@ const userRouter = require('./routers/users')
 const apiRouter = require('./routers/apis')
 const compareRouter = require('./routers/compare')
 const carInfoRouter = require('./routers/carInfo')
+const tempUserRouter = require('./routers/tempUsers')
 
 const app = express()
 const PORT = 5000
 const corsOptions = {
   origin: '*',
 }
-
+app.set('trust proxy', true);
 app.use(express.json())
 app.use(cors(corsOptions))
 app.use(requestIp.mw())
@@ -30,6 +31,7 @@ app.use('/api/user', userRouter)
 app.use('/api/apis', apiRouter)
 app.use('/api/compare', compareRouter)
 app.use('/api/carInfo', carInfoRouter)
+app.use('/api/tempUser', tempUserRouter)
 
 app.use((err, req, res, next) => {
   res.statusCode = err.statusCode || 500
@@ -39,5 +41,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`PORT = ${PORT}`)
 })
-
-
