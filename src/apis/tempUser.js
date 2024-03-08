@@ -1,7 +1,6 @@
 const { TempUser, Mail } = require('../mongoose/model')
 
 const userLog = async (req, res) => {
-  console.log('로그 기록 진입함')
   const currentDate = new Date()
   const year = currentDate.getFullYear()
   const month = String(currentDate.getMonth() + 1).padStart(2, '0')
@@ -13,7 +12,9 @@ const userLog = async (req, res) => {
   try {
     const userIp = req.ip
     const { log } = req.body
+    console.log('아이피 일치 유저 찾기 시작 ip : ', userIp)
     const existingUser = await TempUser.findOne({ userIp })
+    console.log('찾고 다음간계 진행')
     if (existingUser) {
       existingUser.log += `${formattedDate} ${log}\n`
       await existingUser.save()
