@@ -16,7 +16,9 @@ const model = (() => {
     //   console.error('Error updating existing documents:', error);
     // }
   })
-
+  console.log(
+    `mongodb+srv://${process.env.MONGO_ID}:${process.env.MONGO_PW}@smartcabo.ot2ea6n.mongodb.net/smartcabo`
+  )
   mongoose.connect(
     `mongodb+srv://${process.env.MONGO_ID}:${process.env.MONGO_PW}@smartcabo.ot2ea6n.mongodb.net/smartcabo`,
 
@@ -26,8 +28,8 @@ const model = (() => {
     }
   )
   mongoose.connection.on('error', (err) => {
-    console.error(`MongoDB connection error: ${err}`);
-});
+    console.error(`MongoDB connection error: ${err}`)
+  })
 
   const models = {}
   for (const key in schema) {
