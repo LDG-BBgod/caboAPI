@@ -1,6 +1,7 @@
 const { TempUser, Mail } = require('../mongoose/model')
 
 const userLog = async (req, res) => {
+  console.log('로그 기록 진입함')
   const currentDate = new Date()
   const year = currentDate.getFullYear()
   const month = String(currentDate.getMonth() + 1).padStart(2, '0')
@@ -24,7 +25,7 @@ const userLog = async (req, res) => {
       await newUser.save()
     }
   } catch (err) {
-    console.error(err)
+    console.error('기록 중 에러 발생 : ', err)
   }
   res.send('')
 }
